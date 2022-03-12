@@ -1,8 +1,5 @@
+import { AppRoutes } from "./routes"
 
-function App() {
-  return(
-    <h2>Renapo API CURP</h2>
-  )
-}
+const App = ()=> <AppRoutes/>
 
 export default App
