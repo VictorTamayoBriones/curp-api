@@ -1,12 +1,34 @@
 import { Container, Spacer, Card, Button, Input } from '@nextui-org/react';
 import { useState } from 'react';
 import { PersonalDataForm } from '../../components/PersonalDataForm';
+import axios from 'axios';
 
 export const SearchCurp = () =>{
 
     const[wayToSearch, setWayToSearch]=useState('by curp');
+    const[curp, setCurp]=useState('');
 
     const handleClick = (action) => setWayToSearch(action)
+
+    const handleChange = (e) => setCurp(e.target.value)
+
+    const handleSearch = async(curp) =>{
+        let config = {
+            headers: {
+              'content-type': 'application/json',
+              'x-rapidapi-host': 'curp-renapo.p.rapidapi.com',
+              'x-rapidapi-key': 'fdbdc85056mshe9b0c25d1983714p1a8efajsn63285b310483'
+            },
+            data: {curp: curp}
+        };
+
+        try{
+            const res = await axios.post('https://curp-renapo.p.rapidapi.com/v1/curp', config)
+            console.log(res.data)
+        }catch(err){
+            console.log(err.response)
+        }
+    }
 
     return(
         <Container>
@@ -17,21 +39,12 @@ export const SearchCurp = () =>{
                     <Button onClick={()=>handleClick('by data')} >Consulta CURP con datos personales</Button>
                 </Card.Header>
                 <Card.Body>
-                    { wayToSearch === 'by curp' ? <Input placeholder='Ingresa tu CURP' label="CURP" animated={false} /> : <PersonalDataForm/>}
+                    { wayToSearch === 'by curp' ? <Input placeholder='Ingresa tu CURP' value={curp} onChange={handleChange} label="CURP" animated={false} /> : <PersonalDataForm/>}
                 </Card.Body>
                 <Card.Footer>
-                    <Button>Search CURP</Button>
+                    <Button onClick={handleSearch} >Search CURP</Button>
                 </Card.Footer>
             </Card>
         </Container>
     )
 }
-
-// {
-//     "paternal_surname": "BENITEZ",
-//     "entity_birth": "MN",
-//     "birthdate": "09/16/1988",
-//     "names": "JUAN",
-//     "sex": "H",
-//     "mothers_maiden_name": "HERNANDEZ"
-// }
